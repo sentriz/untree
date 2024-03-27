@@ -1,0 +1,42 @@
+-- in --
+one
+    two
+        three
+        four
+            five
+            five
+                six
+            five
+        wow
+    five
+bb
+cc
+    eee
+               x
+              x
+               x
+              x
+    1ee
+    1ee
+x
+-- out --
+	one
+one	    two
+one two	        three
+one two	        four
+one two four	            five
+one two four	            five
+one two four five	                six
+one two four	            five
+one two	        wow
+one	    five
+	bb
+	cc
+cc	    eee
+cc  eee	               x
+cc  eee	              x
+cc  eee	               x
+cc  eee	              x
+cc	    1ee
+cc	    1ee
+	x

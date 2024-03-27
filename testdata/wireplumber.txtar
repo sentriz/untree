@@ -1,0 +1,18 @@
+-- in --
+audio
+    devices
+           71 built-in audio                      [alsa]
+          117 logitech webcam c925e               [alsa]
+          144 audiobox go                         [alsa]
+    sinks
+            72 audiobox go analog stereo           [vol: 1.00] *
+            74 built-in audio analog stereo        [vol: 1.06]
+-- out --
+	audio
+audio	    devices
+audio devices	           71 built-in audio                      [alsa]
+audio devices	          117 logitech webcam c925e               [alsa]
+audio devices	          144 audiobox go                         [alsa]
+audio	    sinks
+audio  sinks	            72 audiobox go analog stereo           [vol: 1.00] *
+audio  sinks	            74 built-in audio analog stereo        [vol: 1.06]

@@ -1,0 +1,20 @@
+-- in --
+package main
+
+import (
+	"bytes"
+	"path/filepath"
+	"testing"
+
+	"golang.org/x/tools/txtar"
+)
+-- out --
+	package main
+	
+	import (
+import (	    "bytes"
+import (	    "path/filepath"
+import (	    "testing"
+	
+import (	    "golang.org/x/tools/txtar"
+	)

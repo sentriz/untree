@@ -1,0 +1,22 @@
+-- in --
+export type ImportStatus = {
+  errors: {
+    error: string
+    time: string
+  }[]
+  running: boolean
+  last_hash: string
+  count_total: number
+  count_processed: number
+}
+-- out --
+	export type ImportStatus = {
+export type ImportStatus = {	  errors: {
+export type ImportStatus = { errors: {	    error: string
+export type ImportStatus = { errors: {	    time: string
+export type ImportStatus = {	  }[]
+export type ImportStatus = {	  running: boolean
+export type ImportStatus = {	  last_hash: string
+export type ImportStatus = {	  count_total: number
+export type ImportStatus = {	  count_processed: number
+	}

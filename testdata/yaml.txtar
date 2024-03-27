@@ -1,0 +1,38 @@
+-- in --
+ doe: "a deer, a female deer"
+ ray: "a drop of golden sun"
+ pi: 3.14159
+ xmas: true
+ french-hens: 3
+ calling-birds:
+   - huey
+   - dewey
+   - louie
+   - fred
+ xmas-fifth-day:
+   calling-birds: four
+   french-hens: 3
+   golden-rings: 5
+   partridges:
+     count: 1
+     location: "a pear tree"
+   turtle-doves: two
+-- out --
+	 doe: "a deer, a female deer"
+	 ray: "a drop of golden sun"
+	 pi: 3.14159
+	 xmas: true
+	 french-hens: 3
+	 calling-birds:
+calling-birds:	   - huey
+calling-birds:	   - dewey
+calling-birds:	   - louie
+calling-birds:	   - fred
+	 xmas-fifth-day:
+xmas-fifth-day:	   calling-birds: four
+xmas-fifth-day:	   french-hens: 3
+xmas-fifth-day:	   golden-rings: 5
+xmas-fifth-day:	   partridges:
+xmas-fifth-day:  partridges:	     count: 1
+xmas-fifth-day:  partridges:	     location: "a pear tree"
+xmas-fifth-day:	   turtle-doves: two

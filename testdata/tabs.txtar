@@ -1,0 +1,12 @@
+-- in --
+one
+    two
+    three
+         wow!
+    four
+-- out --
+	one
+one	    two
+one	    three
+one three	         wow!
+one	    four

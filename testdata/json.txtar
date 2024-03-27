@@ -1,0 +1,24 @@
+-- in --
+{
+  "name": "joe",
+  "birthday": 22,
+  "address": {
+    "country": {
+      "continent": "europe",
+      "name": "ireland"
+    },
+    "street": "main street"
+  }
+}
+-- out --
+	{
+{	  "name": "joe",
+{	  "birthday": 22,
+{	  "address": {
+{ "address": {	    "country": {
+{ "address": { "country": {	      "continent": "europe",
+{ "address": { "country": {	      "name": "ireland"
+{ "address": {	    },
+{ "address": {	    "street": "main street"
+{	  }
+	}

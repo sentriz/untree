@@ -1,0 +1,26 @@
+-- in --
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>hello</title>
+  </head>
+  <body>
+    <div>
+      <p>hello</p>
+    </div>
+  </body>
+</html>
+-- out --
+	<!doctype html>
+	<html>
+<html>	  <head>
+<html> <head>	    <meta charset="utf-8" />
+<html> <head>	    <title>hello</title>
+<html>	  </head>
+<html>	  <body>
+<html> <body>	    <div>
+<html> <body> <div>	      <p>hello</p>
+<html> <body>	    </div>
+<html>	  </body>
+	</html>
