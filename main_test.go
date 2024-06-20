@@ -37,7 +37,7 @@ func runPath(t testing.TB, path string) {
 	}
 
 	var out bytes.Buffer
-	err = run(bytes.NewReader(in), &out)
+	err = run("", bytes.NewReader(in), &out)
 	nilErr(t, err)
 
 	if !bytes.Equal(expOut, out.Bytes()) {

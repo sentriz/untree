@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -10,8 +11,11 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		if err := run(os.Stdin, os.Stdout); err != nil {
+	withFilepaths := flag.Bool("paths", false, "include filepaths in output")
+	flag.Parse()
+
+	if flag.NArg() == 0 {
+		if err := run("", os.Stdin, os.Stdout); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
@@ -19,14 +23,18 @@ func main() {
 	}
 
 	var pathErrs []error
-	for _, path := range os.Args[1:] {
+	for _, path := range flag.Args() {
+		var prefix string
+		if *withFilepaths {
+			prefix = path + "\t"
+		}
 		pathErrs = append(pathErrs, func() error {
 			f, err := os.Open(path)
 			if err != nil {
 				return err
 			}
 			defer f.Close()
-			if err := run(f, os.Stdout); err != nil {
+			if err := run(prefix, f, os.Stdout); err != nil {
 				return fmt.Errorf("run: %w", err)
 			}
 			return nil
@@ -38,7 +46,7 @@ func main() {
 	}
 }
 
-func run(in io.Reader, out io.Writer) error {
+func run(linePrefix string, in io.Reader, out io.Writer) error {
 	var level = leveler()
 	var prefix []string
 	var prevLine string
@@ -47,7 +55,7 @@ func run(in io.Reader, out io.Writer) error {
 	for sc.Scan() {
 		line := sc.Text()
 		if strings.TrimFunc(line, isSpace) == "" {
-			fmt.Fprintln(out, "\t")
+			fmt.Fprintf(out, "%s\t\n", linePrefix)
 			continue
 		}
 		if l := level(line); l > len(prefix) {
@@ -58,7 +66,8 @@ func run(in io.Reader, out io.Writer) error {
 		} else if l < len(prefix) {
 			prefix = prefix[:l]
 		}
-		fmt.Fprintf(out, "%s\t%s\n",
+		fmt.Fprintf(out, "%s%s\t%s\n",
+			linePrefix,
 			strings.TrimSpace(strings.Join(prefix, " ")),
 			strings.ReplaceAll(line, "\t", "    "),
 		)
