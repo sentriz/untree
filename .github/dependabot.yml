@@ -1,0 +1,10 @@
+version: 2
+multi-ecosystem-groups:
+  all:
+    schedule:
+      interval: weekly
+updates:
+  - package-ecosystem: gomod
+    directory: /
+    multi-ecosystem-group: all
+    patterns: ["*"]
