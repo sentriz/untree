@@ -12,10 +12,21 @@ import (
 
 func main() {
 	withFilepaths := flag.Bool("paths", false, "include filepaths in output")
+	withVim := flag.Bool("vim", false, "output as path:line:col: for quickfix / grepprg")
 	flag.Parse()
 
+	prefixer := func(path string) prefixFunc {
+		switch {
+		case *withVim:
+			return func(lineNum, col int) string { return fmt.Sprintf("%s:%d:%d:", path, lineNum, col) }
+		case *withFilepaths:
+			return func(int, int) string { return path + "\t" }
+		}
+		return noPrefix
+	}
+
 	if flag.NArg() == 0 {
-		if err := run("", os.Stdin, os.Stdout); err != nil {
+		if err := run(prefixer(""), os.Stdin, os.Stdout); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
@@ -24,10 +35,7 @@ func main() {
 
 	var pathErrs []error
 	for _, path := range flag.Args() {
-		var prefix string
-		if *withFilepaths {
-			prefix = path + "\t"
-		}
+		prefix := prefixer(path)
 		pathErrs = append(pathErrs, func() error {
 			f, err := os.Open(path)
 			if err != nil {
@@ -46,16 +54,24 @@ func main() {
 	}
 }
 
-func run(linePrefix string, in io.Reader, out io.Writer) error {
+// prefixFunc renders the per-line prefix for the 1-indexed line number and the
+// column of its first non-space byte.
+type prefixFunc func(lineNum, col int) string
+
+func noPrefix(int, int) string { return "" }
+
+func run(linePrefix prefixFunc, in io.Reader, out io.Writer) error {
 	var level = leveler()
 	var prefix []string
 	var prevLine string
+	var lineNum int
 
 	sc := bufio.NewScanner(in)
 	for sc.Scan() {
 		line := sc.Text()
+		lineNum++
 		if strings.TrimFunc(line, isSpace) == "" {
-			fmt.Fprintf(out, "%s\t\n", linePrefix)
+			fmt.Fprintf(out, "%s\t\n", linePrefix(lineNum, 1))
 			continue
 		}
 		if l := level(line); l > len(prefix) {
@@ -67,7 +83,7 @@ func run(linePrefix string, in io.Reader, out io.Writer) error {
 			prefix = prefix[:l]
 		}
 		fmt.Fprintf(out, "%s%s\t%s\n",
-			linePrefix,
+			linePrefix(lineNum, indentWidth(line)+1),
 			strings.TrimSpace(strings.Join(prefix, " ")),
 			strings.ReplaceAll(line, "\t", "    "),
 		)
@@ -79,9 +95,9 @@ func run(linePrefix string, in io.Reader, out io.Writer) error {
 func leveler() func(line string) int {
 	var shift string
 	return func(line string) int {
-		i := strings.IndexFunc(line, func(r rune) bool { return !isSpace(r) })
-		if i <= 0 {
-			return i
+		i := indentWidth(line)
+		if i == 0 {
+			return 0
 		}
 		if shift == "" {
 			shift = strings.Repeat(string([]rune(line)[0]), i)
@@ -89,6 +105,13 @@ func leveler() func(line string) int {
 		level := countPrefix(line, shift)
 		return level
 	}
+}
+
+func indentWidth(line string) int {
+	if i := strings.IndexFunc(line, func(r rune) bool { return !isSpace(r) }); i > 0 {
+		return i
+	}
+	return 0
 }
 
 func countPrefix(line, p string) int {
