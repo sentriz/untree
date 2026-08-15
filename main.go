@@ -22,7 +22,8 @@ func main() {
 		case *withFilepaths:
 			return func(int, int) string { return path + "\t" }
 		}
-		return noPrefix
+		return func(int, int) string { return "" }
+
 	}
 
 	if flag.NArg() == 0 {
@@ -53,12 +54,6 @@ func main() {
 		os.Exit(1)
 	}
 }
-
-// prefixFunc renders the per-line prefix for the 1-indexed line number and the
-// column of its first non-space byte.
-type prefixFunc func(lineNum, col int) string
-
-func noPrefix(int, int) string { return "" }
 
 func run(linePrefix prefixFunc, in io.Reader, out io.Writer) error {
 	var level = leveler()
@@ -91,6 +86,8 @@ func run(linePrefix prefixFunc, in io.Reader, out io.Writer) error {
 	}
 	return sc.Err()
 }
+
+type prefixFunc func(lineNum, col int) string
 
 func leveler() func(line string) int {
 	var shift string
