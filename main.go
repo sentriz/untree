@@ -21,8 +21,9 @@ func main() {
 			return func(lineNum, col int) string { return fmt.Sprintf("%s:%d:%d:", path, lineNum, col) }
 		case *withFilepaths:
 			return func(int, int) string { return path + "\t" }
+		default:
+			return func(int, int) string { return "" }
 		}
-		return func(int, int) string { return "" }
 
 	}
 
